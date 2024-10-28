@@ -57,7 +57,7 @@ const AgencySchema = new mongoose.Schema({
     type: String,
     required: false,
     match:
-        /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/g,
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/g,
   },
   countyCode: {
     type: String,
@@ -74,8 +74,8 @@ const AgencySchema = new mongoose.Schema({
   suppliers: {
     type: Map,
     of: [String],
-     //replace with supplier objects
-  }
+    // replace with supplier objects
+  },
 });
 
 interface IAgency extends mongoose.Document {
@@ -90,7 +90,7 @@ interface IAgency extends mongoose.Document {
   phoneNumber: string;
   phoneExtension: string;
   contact: string;
-  searchName: string; 
+  searchName: string;
   email: string;
   countyCode: string;
   activityStatus: string;
