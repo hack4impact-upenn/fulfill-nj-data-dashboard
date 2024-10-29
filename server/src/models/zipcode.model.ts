@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 
 interface IZipcode extends mongoose.Document {
   _id: string;
-  zipcode: number;
+  zipcode: string;
 	enabled_agencies: Agency[];
 	suppliers: Supplier[];
 	lbs_distributed: number;
@@ -25,7 +25,7 @@ interface IZipcode extends mongoose.Document {
 
 const ZipcodeSchema = new mongoose.Schema({
   zipcode: {
-    type: Number,
+    type: String,
     required: true,
   },
   lbs_distributed: {
