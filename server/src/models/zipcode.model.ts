@@ -78,6 +78,7 @@ const ZipcodeSchema = new mongoose.Schema({
   },
 });
 
-const Session = mongoose.model<IZipcode>('Session', ZipcodeSchema);
+const Zipcode = mongoose.model<IZipcode>('Zipcode', ZipcodeSchema);
 
-export default Session;
+export { IZipcode, Zipcode };
+
