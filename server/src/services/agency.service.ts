@@ -1,25 +1,26 @@
 import fs from 'fs';
-import { parse } from 'csv-parse';
 import { Agency, IAgency } from '../models/agency.model.ts';
 
-const headerMapping = {
-  'No.': 'no',
-  Name: 'name',
-  Address: 'address',
-  City: 'city',
-  State: 'state',
-  'ZIP Code': 'zipcode',
-  'Permit Web Orders': 'permitWebOrders',
-  'Location Code': 'locationCode',
-  'Phone No.': 'phoneNumber',
-  'Phone Ext. No.': 'phoneExtension',
-  Contact: 'contact',
-  'Search Name': 'searchName',
-  'E-Mail': 'email',
-  'FBC County Code': 'countyCode',
-  'UNC Activity Status': 'activityStatus',
-  'Days and Hours of Operation': 'hoursOfOperation',
-};
+const headerMapping = new Map<string, string>([
+  ['No.', 'no'],
+  ['Agency', 'agency'],
+  ['Edited Agency', 'editedAgency'],
+  ['Address', 'address'],
+  ['Total', 'total'],
+  ['City', 'city'],
+  ['State', 'state'],
+  ['ZIP Code', 'zipcode'],
+  ['Permit Web Orders', 'permitWebOrders'],
+  ['Location Code', 'locationCode'],
+  ['Phone No.', 'phoneNumber'],
+  ['Phone Ext. No.', 'phoneExtension'],
+  ['Contact', 'contact'],
+  ['Search Name', 'searchName'],
+  ['E-Mail', 'email'],
+  ['FBC County Code', 'countyCode'],
+  ['UNC Activity Status', 'activityStatus'],
+  ['Days and Hours of Operation', 'hoursOfOperation'],
+]);
 
 const getAllAgencies = async () => {
   const donors = await Agency.find().exec();
@@ -32,43 +33,40 @@ const createAgency = async (agency: IAgency) => {
   return result;
 };
 
-const uploadAgencyCSV = async (filePath: string) => {
+const uploadAgencyJSON = async (jsonData: any) => {
   const agencyList: Partial<IAgency>[] = [];
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(filePath)
-      .pipe(parse({columns: true}))
-      .on('data', (row: Record<string, string>) => {
-        const agency: Partial<IAgency> = {};
-        Object.entries(headerMapping).forEach(([csvHeader, schemaField]) => {
-          if (csvHeader in row) {
-            const value = row[csvHeader];
-            switch (schemaField) {
-              case 'zipcode':
-                agency[schemaField] = parseInt(value, 10);
-                break;
-              case 'permitWebOrders':
-                agency[schemaField] = value.toLowerCase() === 'true';
-                break;
-              default:
-                agency[schemaField as keyof IAgency] = value;
-            }
-          }
-        });
-        agency.suppliers = new Map();
-        agencyList.push(agency);
-      })
-      .on('end', async () => {
-        try {
-          const createdAgencies = await Agency.insertMany(agencyList);
-          resolve(createdAgencies);
-        } catch (error) {
-          reject(error);
-        }
-      })
-      .on('error', (error: unknown) => {
-        reject(error);
-      });
-  });
+  // let monthsRE = new RegExp("^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/g");
+
+  for (const r in jsonData) { // row = agency
+    const row = jsonData[r]
+    const agency: Partial<IAgency> = {};
+    headerMapping.forEach((value: string, key: any) => {
+      if (row[key] !== undefined) { // if jsonData has a key from headerMapping
+        agency[value as keyof IAgency] = row[key];
+      }
+    });
+    agency["monthlyData"] = new Map();
+    agencyList.push(agency);
+  }
+  return agencyList;
 };
 
-export { getAllAgencies, createAgency, uploadAgencyCSV };
+const uploadAgencyMonthlyData = async (jsonData:any) => {
+  for (const r in jsonData) {
+    const row = jsonData[r]
+    const agencyName = row.Agency;
+    const agency = await Agency.findOne({ "agency": agencyName }).exec();
+    const monthlyDataMap = agency?.monthlyData || new Map();
+    Object.entries(row).forEach(([key, value]) => {
+      if (key !== 'Agency') {
+        monthlyDataMap.set(key, value);
+      }
+    });
+    await Agency.findOneAndUpdate(
+      { "agency": agencyName },
+      { $set: { "monthlyData" : monthlyDataMap }}
+    ).exec();
+  }
+}
+
+export { getAllAgencies, createAgency, uploadAgencyJSON, uploadAgencyMonthlyData };

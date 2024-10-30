@@ -9,8 +9,16 @@ const AgencySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  name: {
+  agency: {
     type: String,
+    required: true,
+  },
+  editedAgency: {
+    type: String,
+    required: false,
+  },
+  total: {
+    type: Number,
     required: true,
   },
   address: {
@@ -26,7 +34,7 @@ const AgencySchema = new mongoose.Schema({
     required: true,
   },
   zipcode: {
-    type: Number,
+    type: String,
     required: true,
   },
   permitWebOrders: {
@@ -71,20 +79,22 @@ const AgencySchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  suppliers: {
+  monthlyData: {
     type: Map,
-    of: [String],
-    // replace with supplier objects
+    of: Number,
+    default: {},
   },
 });
 
 interface IAgency extends mongoose.Document {
   no: string;
   name: string;
+  editedName: string;
+  total: number;
   address: string;
   city: string;
   state: string;
-  zipcode: number;
+  zipcode: string;
   permitWebOrders: boolean;
   locationCode: string;
   phoneNumber: string;
@@ -95,7 +105,7 @@ interface IAgency extends mongoose.Document {
   countyCode: string;
   activityStatus: string;
   hoursOfOperation: string;
-  suppliers: Map<string, string[]>;
+  monthlyData: Map<string, number>;
 }
 
 const Agency = mongoose.model<IAgency>('Agency', AgencySchema);

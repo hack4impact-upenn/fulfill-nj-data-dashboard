@@ -7,7 +7,8 @@ import { IAgency } from '../models/agency.model.ts';
 import {
   getAllAgencies,
   createAgency,
-  uploadAgencyCSV,
+  uploadAgencyJSON,
+  uploadAgencyMonthlyData,
 } from '../services/agency.service.ts';
 
 const getAllAgenciesController = async (
@@ -24,7 +25,7 @@ const getAllAgenciesController = async (
     });
 };
 
-const getUploadAgencyCSVController = async (
+const getUploadAgencyJSONController = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,
@@ -33,13 +34,13 @@ const getUploadAgencyCSVController = async (
   // It validates the input (checking if a file is present).
   // It calls the processCsvFile function from the agencyService.
 
-  const filePath: string | null = req.body;
-  if (!filePath) {
+  const data: string | null = req.body;
+  if (!data) {
     next(ApiError.missingFields(['agency']));
     return;
   }
-  return uploadAgencyCSV(filePath)
-    .then((results: any) => {
+  return uploadAgencyJSON(data)
+    .then((results: any) => { //agencyList
       res.status(StatusCode.OK).send(results);
     })
     .catch((e) => {
@@ -48,4 +49,4 @@ const getUploadAgencyCSVController = async (
     });
 };
 
-export { getAllAgenciesController, getUploadAgencyCSVController };
+export { getAllAgenciesController, getUploadAgencyJSONController };

@@ -3,7 +3,7 @@ import express from 'express';
 
 import {
   getAllAgenciesController,
-  getUploadAgencyCSVController,
+  getUploadAgencyJSONController,
 } from '../controllers/agency.controller.ts';
 
 const router = express.Router();
@@ -11,7 +11,7 @@ const router = express.Router();
 router.get('/all', getAllAgenciesController);
 
 // create
-router.get('/upload', getUploadAgencyCSVController);
+router.get('/uploadagencycontact', getUploadAgencyJSONController);
 
 // delete
 
