@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { Agency, IAgency } from '../models/agency.model.ts';
+import { ValidationError } from 'mongoose'; 
 
 const headerMapping = new Map<string, string>([
   ['No.', 'no'],
@@ -35,21 +36,42 @@ const createAgency = async (agency: IAgency) => {
 
 const uploadAgencyJSON = async (jsonData: any) => {
   const agencyList: Partial<IAgency>[] = [];
-  // let monthsRE = new RegExp("^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/g");
+  const failedEntries: any[] = []; // To keep track of entries that don't match the IAgency format
 
-  for (const r in jsonData) { // row = agency
-    const row = jsonData[r]
+  for (const r in jsonData) {
+    const row = jsonData[r];
     const agency: Partial<IAgency> = {};
+
     headerMapping.forEach((value: string, key: any) => {
-      if (row[key] !== undefined) { // if jsonData has a key from headerMapping
+      if (row[key] !== undefined) {
         agency[value as keyof IAgency] = row[key];
       }
     });
-    agency["monthlyData"] = new Map();
-    agencyList.push(agency);
+
+    agency["monthlyData"] = new Map(); 
+    try {
+      // check if existing agency if not:
+      if (!Agency.findOne({ agency })) {
+        const agencyDocument = new Agency(agency);
+        agencyList.push(agency);
+        await agencyDocument.save();
+      }
+      // update agency 
+      else 
+      {
+        
+      }
+    } catch (error: any) {
+      failedEntries.push({ entry: row, error: error.message });
+    }
   }
-  return agencyList;
+  return {
+    saved: agencyList.length,
+    failed: failedEntries.length,
+    failedEntries, // Optional: return failed entries for further inspection
+  };
 };
+
 
 const uploadAgencyMonthlyData = async (jsonData:any) => {
   for (const r in jsonData) {

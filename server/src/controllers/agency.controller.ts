@@ -30,17 +30,13 @@ const getUploadAgencyJSONController = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  // The controller receives the file in the request.
-  // It validates the input (checking if a file is present).
-  // It calls the processCsvFile function from the agencyService.
-
-  const data: string | null = req.body;
+  const data: any | null = req.body;
   if (!data) {
     next(ApiError.missingFields(['agency']));
     return;
   }
   return uploadAgencyJSON(data)
-    .then((results: any) => { //agencyList
+    .then((results: any) => {
       res.status(StatusCode.OK).send(results);
     })
     .catch((e) => {
@@ -49,4 +45,25 @@ const getUploadAgencyJSONController = async (
     });
 };
 
-export { getAllAgenciesController, getUploadAgencyJSONController };
+const uploadAgencyPickUpController = async (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) => {
+  const data: any | null = req.body;
+  if (!data) {
+    next(ApiError.missingFields(['agency']));
+    return;
+  }
+  return uploadAgencyJSON(data)
+    .then((results: any) => {
+      res.status(StatusCode.OK).send(results);
+    })
+    .catch((e) => {
+      console.log('unable to upload agency error', e.message);
+      next(ApiError.internal('Unable to upload agency'));
+    });
+};
+
+export { getAllAgenciesController, getUploadAgencyJSONController, uploadAgencyPickUpController };
+

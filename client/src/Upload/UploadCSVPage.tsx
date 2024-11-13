@@ -6,19 +6,35 @@ const CSVUploadPage = () => {
   const [csvData, setCsvData] = useState([]);
   const [error, setError] = useState('');
 
-  const handleFileUpload = (data: any) => {
+  const handleFileUpload = async (data: any) => {
     setCsvData(data);
-    postData('agency/uploadagencycontact', data).then((res) => {
-        if (res.error) {
-          setError(res.error.message);
-        }
-      });
-
+    const chunkSize = 50; 
+    for (let i = 0; i < data.length; i += chunkSize) {
+      const chunk = data.slice(i, i + chunkSize);
+      const res = await postData('agency/uploadagencycontact', chunk);
+      if (res.error) {
+        throw Error(res.error.message);
+      }
+    }
   };
 
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h2>Upload Agency Contact CSV File</h2>
+      <CSVReader
+        onFileLoaded={handleFileUpload}
+        onError={(error) => console.error('Error reading file:', error)}
+        parserOptions={{ header: true }}
+        inputId="csvUpload"
+        inputStyle={{
+          marginTop: '20px',
+          padding: '10px',
+          borderRadius: '5px',
+          border: '1px solid #ccc'
+        }}
+      />
+
+      <h2>Upload Agency Pickups CSV File</h2>
       <CSVReader
         onFileLoaded={handleFileUpload}
         onError={(error) => console.error('Error reading file:', error)}
