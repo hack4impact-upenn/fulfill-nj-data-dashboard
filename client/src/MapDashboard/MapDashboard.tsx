@@ -16,8 +16,6 @@ const Map = ReactMapboxGl({
 
 const zipCodeData = require("./nj_new_jersey_zip_codes_geo.min.json");
 
-console.log(zipCodeData)
-
 
 interface Address {
   Agency: string;
