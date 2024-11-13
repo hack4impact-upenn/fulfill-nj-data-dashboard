@@ -55,13 +55,13 @@ const uploadAgencyPickUpController = async (
     next(ApiError.missingFields(['agency']));
     return;
   }
-  return uploadAgencyJSON(data)
+  return uploadAgencyMonthlyData(data)
     .then((results: any) => {
       res.status(StatusCode.OK).send(results);
     })
     .catch((e) => {
-      console.log('unable to upload agency error', e.message);
-      next(ApiError.internal('Unable to upload agency'));
+      console.log('unable to upload agency pickup error', e.message);
+      next(ApiError.internal('Unable to upload agency pickup'));
     });
 };
 

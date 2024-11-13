@@ -2,13 +2,14 @@ import express from 'express';
 // import { isAuthenticated } from '../controllers/auth.middleware.ts';
 
 import {
-  getAllAgencyPickUpController,
+  getAllAgenciesController,
+  uploadAgencyPickUpController,
   getUploadAgencyJSONController,
 } from '../controllers/agency.controller.ts';
 
 const router = express.Router();
 
-// router.get('/all', getAllAgenciesController);
+router.get('/all', getAllAgenciesController);
 
 // create
 router.post('/uploadagencycontact', getUploadAgencyJSONController);
@@ -18,6 +19,6 @@ router.post('/uploadagencycontact', getUploadAgencyJSONController);
 // update agency information
 
 // update agency pickup days
-router.post('/uploadagencypickup', getAllAgencyPickUpController);
+router.post('/uploadagencypickup', uploadAgencyPickUpController);
 
 export default router;

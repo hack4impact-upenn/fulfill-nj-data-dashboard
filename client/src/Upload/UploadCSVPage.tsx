@@ -3,11 +3,11 @@ import CSVReader from 'react-csv-reader';
 import { postData } from '../util/api.tsx';
 
 const CSVUploadPage = () => {
-  const [csvData, setCsvData] = useState([]);
+  // const [csvData, setCsvData] = useState([]);
   const [error, setError] = useState('');
 
-  const handleFileUpload = async (data: any) => {
-    setCsvData(data);
+  const handleAgencyContactFileUpload = async (data: any) => {
+    // setCsvData(data);
     const chunkSize = 50; 
     for (let i = 0; i < data.length; i += chunkSize) {
       const chunk = data.slice(i, i + chunkSize);
@@ -15,6 +15,20 @@ const CSVUploadPage = () => {
       if (res.error) {
         throw Error(res.error.message);
       }
+      break;
+    }
+  };
+
+  const handleAgencyPickUpFileUpload = async (data: any) => {
+    // setCsvData(data);
+    const chunkSize = 20; 
+    for (let i = 0; i < data.length; i += chunkSize) {
+      const chunk = data.slice(i, i + chunkSize);
+      const res = await postData('agency/uploadagencypickup', chunk);
+      if (res.error) {
+        throw Error(res.error.message);
+      }
+      break;
     }
   };
 
@@ -22,7 +36,7 @@ const CSVUploadPage = () => {
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <h2>Upload Agency Contact CSV File</h2>
       <CSVReader
-        onFileLoaded={handleFileUpload}
+        onFileLoaded={handleAgencyContactFileUpload}
         onError={(error) => console.error('Error reading file:', error)}
         parserOptions={{ header: true }}
         inputId="csvUpload"
@@ -36,7 +50,7 @@ const CSVUploadPage = () => {
 
       <h2>Upload Agency Pickups CSV File</h2>
       <CSVReader
-        onFileLoaded={handleFileUpload}
+        onFileLoaded={handleAgencyPickUpFileUpload}
         onError={(error) => console.error('Error reading file:', error)}
         parserOptions={{ header: true }}
         inputId="csvUpload"

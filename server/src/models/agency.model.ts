@@ -9,11 +9,11 @@ const AgencySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  agency: {
+  name: {
     type: String,
     required: true,
   },
-  editedAgency: {
+  editedName: {
     type: String,
     required: false,
   },
