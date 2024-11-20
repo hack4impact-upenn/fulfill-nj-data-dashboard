@@ -23,7 +23,8 @@ import ResetPasswordPage from './Authentication/ResetPasswordPage.tsx';
 import AlertPopup from './components/AlertPopup.tsx';
 import InviteRegisterPage from './Authentication/InviteRegisterPage.tsx';
 import MapDashboard from './MapDashboard/MapDashboard.tsx';
-import addresses from './DummyData/final_merged_df.json';
+// import addresses from './ActualData/actual_merged_data.json';
+import router from 'server/src/routes/location.route.ts';
 
 function App() {
   return (
@@ -59,7 +60,8 @@ function App() {
                   {/* Routes accessed only if user is authenticated */}
                   <Route element={<ProtectedRoutesWrapper />}>
                     <Route path="/home" element={<HomePage />} />
-                    <Route path="/dashboard" element={<MapDashboard addressList={addresses}/>} />
+                    <Route path="/dashboard" element={<MapDashboard addressList={[]} />} />
+
                   </Route>
                   <Route element={<AdminRoutesWrapper />}>
                     <Route path="/users" element={<AdminDashboardPage />} />

@@ -1,18 +1,15 @@
 /* eslint-disable */
 import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { LngLat, LngLatBounds} from 'mapbox-gl';
-import addresses from '../DummyData/final_merged_df.json'
-import React, {useState, useEffect} from 'react';
-import { string } from 'prop-types';
-import { add } from 'winston';
-
+import {useState, useEffect} from 'react';
+import {postData, putData} from '../util/api.tsx';
+import { getLocations, addLocation, deleteLocation } from './api.tsx'
 const Map = ReactMapboxGl({
   accessToken:
     'pk.eyJ1IjoiZGhydXZndXAiLCJhIjoiY20yZjRoaHF1MDU3ZTJvcHFydGNoemR3bSJ9.IQmyIaXEYPl2NWrZ7hHJxQ',
 });
 // mapboxAccessToken="sk.eyJ1IjoiZGhydXZndXAiLCJhIjoiY20yZjRycWQ4MDVjaTJsb283azNpY2NtbyJ9._03wsEghyp5zca-e7RTexg"
-
+ 
 interface Address {
   Agency: string;
   Address: string;
@@ -32,8 +29,29 @@ interface MapDashboardProps {
 }
 
 function MapDashboard(props: MapDashboardProps) {
-  const addressList = props.addressList
+  const [addressList, setAddressList] = useState([]);
+  // const addressList = props.addressList
   const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
+  console.log('here');
+  useEffect(() => {
+    console.log("running");
+    const fetchAddresses = async () => {
+      try {
+        const response = await getLocations();
+        console.log("getting locations");
+        if (!response) {
+          throw new Error('getlocations did not succeed');
+        }
+        const data = await response.json();
+        console.log(data);
+        setAddressList(data);
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+      }
+    };
+    fetchAddresses();
+  }, []);
+  
 
   // Function to fetch coordinates for each address
   const fetchCoordinates = async (address: Address) => {
@@ -44,7 +62,7 @@ function MapDashboard(props: MapDashboardProps) {
     const data = await response.json();
     const [lat, lng] = data.features[0].geometry.coordinates; // Get the first match
     return { lng, lat, Agency: address.Agency};
-  };
+  };  
 
   useEffect(() => {
     const getCoordinates = async () => {
@@ -57,7 +75,6 @@ function MapDashboard(props: MapDashboardProps) {
 
 
   return (
-    <>
       <Map
         // eslint-disable-next-line
         style="mapbox://styles/mapbox/streets-v9"
@@ -69,11 +86,13 @@ function MapDashboard(props: MapDashboardProps) {
           height: '100vh',
           width: '100vw',
         }}
+        
       >
         {coordinates.map((marker, index) => (
           <Marker
             key={index}
             coordinates={[marker.lat, marker.lng]}
+            anchor = "center"
           >
             <div style={{
               backgroundColor: 'red',
@@ -93,9 +112,7 @@ function MapDashboard(props: MapDashboardProps) {
             </div>
           </Marker>
         ))}
-          
       </Map>
-    </>
   );
 }
 
