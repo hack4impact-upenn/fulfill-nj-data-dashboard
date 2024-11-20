@@ -1,5 +1,5 @@
 /* eslint-disable */
-import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
+import ReactMapboxGl, { Layer, Source , Feature, Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { LngLat, LngLatBounds} from 'mapbox-gl';
 import addresses from '../DummyData/final_merged_df.json'
@@ -12,6 +12,10 @@ const Map = ReactMapboxGl({
     'pk.eyJ1IjoiZGhydXZndXAiLCJhIjoiY20yZjRoaHF1MDU3ZTJvcHFydGNoemR3bSJ9.IQmyIaXEYPl2NWrZ7hHJxQ',
 });
 // mapboxAccessToken="sk.eyJ1IjoiZGhydXZndXAiLCJhIjoiY20yZjRycWQ4MDVjaTJsb283azNpY2NtbyJ9._03wsEghyp5zca-e7RTexg"
+
+
+const zipCodeData = require("./nj_new_jersey_zip_codes_geo.min.json");
+
 
 interface Address {
   Agency: string;
@@ -56,10 +60,44 @@ function MapDashboard(props: MapDashboardProps) {
   }, [addressList]);
 
 
-  return (
-    <>
+  function MapComp(props: MapDashboardProps) {
+    // ... existing code ...
+  
+    const onMapLoad = (map: mapboxgl.Map) => {
+      map.addSource('zip-boundaries', {
+        type: 'geojson',
+        data: zipCodeData,
+      });
+
+
+  
+      map.addLayer({
+        id: 'zip-layer',
+        type: 'line',
+        source: 'zip-boundaries',
+        paint: {
+          'line-color': '#6e5642',
+          'line-width': 1,
+        }
+      });
+
+      map.addLayer({
+        id: 'zip-layer-shadow',
+        type: 'line',
+        source: 'zip-boundaries',
+        paint: {
+          'line-color': '#6e5642', // Shadow color
+          'line-width': 10,
+          'line-blur': 5,
+          'line-opacity': 0.2,
+        }
+      });
+
+    };
+
+  
+    return (
       <Map
-        // eslint-disable-next-line
         style="mapbox://styles/mapbox/streets-v9"
         maxBounds = {[
           [-74.700000, 39.200000],
@@ -69,6 +107,7 @@ function MapDashboard(props: MapDashboardProps) {
           height: '100vh',
           width: '100vw',
         }}
+        onStyleLoad={onMapLoad}
       >
         {coordinates.map((marker, index) => (
           <Marker
@@ -93,8 +132,14 @@ function MapDashboard(props: MapDashboardProps) {
             </div>
           </Marker>
         ))}
-          
       </Map>
+    );
+  }
+
+  
+  return (
+    <>
+      <MapComp {...props}/>
     </>
   );
 }
