@@ -4,8 +4,8 @@ import { Agency, IAgency } from '../models/agency.model.ts';
 
 const headerMapping = new Map<string, string>([
   ['No.', 'no'],
-  ['Name', 'name'],
-  ['Edited Name', 'editedName'],
+  ['Agency', 'name'],
+  ['Edited Agency', 'editedName'],
   ['Address', 'address'],
   ['Total', 'total'],
   ['City', 'city'],
@@ -51,7 +51,7 @@ const uploadAgencyJSON = async (jsonData: any) => {
       
       agency["monthlyData"] = new Map(); 
     
-
+      console.log(row["Agency"]);
       console.log(agency);
     
       try {
