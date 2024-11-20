@@ -11,7 +11,6 @@ const headerMapping = new Map<string, string>([
   ['City', 'city'],
   ['State', 'state'],
   ['ZIP Code', 'zipcode'],
-  ['Permit Web Orders', 'permitWebOrders'],
   ['Location Code', 'locationCode'],
   ['Phone No.', 'phoneNumber'],
   ['Phone Ext. No.', 'phoneExtension'],
@@ -41,28 +40,30 @@ const uploadAgencyJSON = async (jsonData: any) => {
   for (let i = 0; i < jsonData.length; i++) {
     let row = jsonData[i];
     const agency: Partial<IAgency> = {};
-    
-    headerMapping.forEach((value: string, key: string) => {
-      if (row[key] !== undefined) {
-        let fieldValue = row[key];
-        if (value == "permitWebOrders") {
-          fieldValue = row[key].toLowerCase();
+
+    if (row["Agency"] != "Total"){
+      headerMapping.forEach((value: string, key: string) => {
+        if (row[key] !== undefined) {
+          let fieldValue = row[key];
+          agency[value as keyof IAgency] = fieldValue;
         }
-        agency[value as keyof IAgency] = fieldValue;
-      }
-    });
+      });
+      
+      agency["monthlyData"] = new Map(); 
     
-    agency["monthlyData"] = new Map(); 
-    try {
-      await Agency.findOneAndUpdate( {name: agency["name"]}, agency, { upsert: true } );
-    } catch (error: any) {
-      console.log(error);
-      failedEntries.push({ entry: row, error: error.message });
+
+      console.log(agency);
+    
+      try {
+        await Agency.findOneAndUpdate( {name: agency["name"]}, agency, { upsert: true } );
+      } catch (error: any) {
+        console.log(error);
+        failedEntries.push({ entry: row, error: error.message });
+      }
     }
   }
 
   return {
-    // saved: agencyList.length,
     numFailed: failedEntries.length,
     failedEntries: failedEntries,
   };
@@ -73,8 +74,9 @@ const uploadAgencyMonthlyData = async (jsonData:any) => {
   for (const r in jsonData) {
     const row = jsonData[r];
     try {
-      const agency = await Agency.findOne({ name: row["Agency"] });
+      const agency = await Agency.findOne({ name: row["Edited Agency Name"] });
       if (!agency) {
+        console.log(row);
         console.log('Agency not found');
         return;
       }
@@ -86,8 +88,10 @@ const uploadAgencyMonthlyData = async (jsonData:any) => {
           console.log(`${month} doesn't exist. Adding new value.`);
         }
         // Add or update the data in the Map
-        monthlyDataMap.set(month, Number(value));
+        const val = String(value).replace(/,/g, ""); 
+        monthlyDataMap.set(month, Number(val));
       }
+      console.log(monthlyDataMap);
       await Agency.findOneAndUpdate( {name: agency["name"]}, agency, { upsert: true } );
     } catch (error: any) {
       // failedEntries.push({ entry: row, error: error.message });

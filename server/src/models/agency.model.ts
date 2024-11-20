@@ -37,10 +37,6 @@ const AgencySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  permitWebOrders: {
-    type: Boolean,
-    required: true,
-  },
   locationCode: {
     type: String,
     required: true,
@@ -95,7 +91,6 @@ interface IAgency extends mongoose.Document {
   city: string;
   state: string;
   zipcode: string;
-  permitWebOrders: boolean;
   locationCode: string;
   phoneNumber: string;
   phoneExtension: string;
