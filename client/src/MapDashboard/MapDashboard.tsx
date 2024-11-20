@@ -1,5 +1,5 @@
 /* eslint-disable */
-import ReactMapboxGl, { Layer, Feature, Marker } from 'react-mapbox-gl';
+import ReactMapboxGl, { Layer, Source , Feature, Marker } from 'react-mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { LngLat, LngLatBounds } from 'mapbox-gl';
 import addresses from '../DummyData/final_merged_df.json';
@@ -7,12 +7,18 @@ import React, { useState, useEffect } from 'react';
 import { string } from 'prop-types';
 import { add } from 'winston';
 import ToggleMapButton from '../components/buttons/ToggleMapButton';
+import {postData, putData} from '../util/api.tsx';
+import { getLocations, addLocation, deleteLocation } from './api.tsx'
 
 const Map = ReactMapboxGl({
   accessToken:
     'pk.eyJ1IjoiZGhydXZndXAiLCJhIjoiY20yZjRoaHF1MDU3ZTJvcHFydGNoemR3bSJ9.IQmyIaXEYPl2NWrZ7hHJxQ',
 });
 // mapboxAccessToken="sk.eyJ1IjoiZGhydXZndXAiLCJhIjoiY20yZjRycWQ4MDVjaTJsb283azNpY2NtbyJ9._03wsEghyp5zca-e7RTexg"
+
+
+const zipCodeData = require("./nj_new_jersey_zip_codes_geo.min.json");
+
 
 interface Address {
   Agency: string;
@@ -33,9 +39,11 @@ interface MapDashboardProps {
 }
 
 function MapDashboard(props: MapDashboardProps) {
-  const addressList = props.addressList;
-  const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
   const [layerToggle, setLayerToggle] = useState<boolean>(false);
+  const [addressList, setAddressList] = useState([]);
+  // const addressList = props.addressList
+  const [coordinates, setCoordinates] = useState<Coordinate[]>([]);
+
   // Function to fetch coordinates for each address
   const fetchCoordinates = async (address: Address) => {
     const apistring = address.Address + ' ' + address.City;
@@ -87,8 +95,45 @@ function MapDashboard(props: MapDashboardProps) {
   }
   return (
     <>
+
+  function MapComp(props: MapDashboardProps) {
+    // ... existing code ...
+  
+    const onMapLoad = (map: mapboxgl.Map) => {
+      map.addSource('zip-boundaries', {
+        type: 'geojson',
+        data: zipCodeData,
+      });
+
+
+  
+      map.addLayer({
+        id: 'zip-layer',
+        type: 'line',
+        source: 'zip-boundaries',
+        paint: {
+          'line-color': '#6e5642',
+          'line-width': 1,
+        }
+      });
+
+      map.addLayer({
+        id: 'zip-layer-shadow',
+        type: 'line',
+        source: 'zip-boundaries',
+        paint: {
+          'line-color': '#6e5642', // Shadow color
+          'line-width': 10,
+          'line-blur': 5,
+          'line-opacity': 0.2,
+        }
+      });
+
+    };
+
+  
+    return (
       <Map
-        // eslint-disable-next-line
         style="mapbox://styles/mapbox/streets-v9"
         maxBounds={[
           [-74.7, 39.2],
@@ -98,14 +143,21 @@ function MapDashboard(props: MapDashboardProps) {
           height: '100vh',
           width: '100vw',
         }}
+        onStyleLoad={onMapLoad}
       >
         <ToggleMapButton
           setLayerToggle={setLayerToggle}
           toggled={layerToggle}
         />
-
         {currentLayerHtml}
       </Map>
+    );
+  }
+
+  
+  return (
+    <>
+      <MapComp {...props}/>
     </>
   );
 }
