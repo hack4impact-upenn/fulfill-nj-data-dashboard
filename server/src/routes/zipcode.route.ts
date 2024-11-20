@@ -1,6 +1,11 @@
 import express from 'express';
 import { isAuthenticated } from '../controllers/auth.middleware';
-import { getZipcodeInfoById, getZipcodeInfoByZipcode, getAllZipcodes, removeZipcode } from '../controllers/zipcode.controller';
+import {
+  getZipcodeInfoById,
+  getZipcodeInfoByZipcode,
+  getAllZipcodes,
+  removeZipcode,
+} from '../controllers/zipcode.controller';
 import 'dotenv/config';
 
 const router = express.Router();
@@ -21,6 +26,6 @@ router.get('/:id', isAuthenticated, getZipcodeInfoById);
 router.get('/:zipcode', isAuthenticated, getZipcodeInfoByZipcode);
 
 /**
- * A PUT route to delete a school.
+ * A PUT route to delete a zipcode.
  */
 router.put('/delete', isAuthenticated, removeZipcode);
