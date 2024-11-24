@@ -91,7 +91,6 @@ const uploadAgencyMonthlyData = async (jsonData:any) => {
         const val = String(value).replace(/,/g, ""); 
         monthlyDataMap.set(month, Number(val));
       }
-      console.log(monthlyDataMap);
       await Agency.findOneAndUpdate( {name: agency["name"]}, agency, { upsert: true } );
     } catch (error: any) {
       // failedEntries.push({ entry: row, error: error.message });
