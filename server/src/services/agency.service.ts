@@ -76,7 +76,6 @@ const uploadAgencyMonthlyData = async (jsonData:any) => {
     try {
       const agency = await Agency.findOne({ name: row["Edited Agency Name"] });
       if (!agency) {
-        console.log(row);
         console.log('Agency not found');
         return;
       }
