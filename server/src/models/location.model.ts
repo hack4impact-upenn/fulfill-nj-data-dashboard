@@ -5,24 +5,24 @@
 import mongoose from 'mongoose';
 
 const locationSchema = new mongoose.Schema({
-  name: {
+  Name: {
     type: String,
     required: true,
   },
-  address: {
+  Address: {
     type: String,
     required: true,
   },
-  category: {
+  Category: {
     type: String,
     required: true,
   },
 });
 
 interface ILocation extends mongoose.Document {
-  name: string;
-  address: string;
-  category: string;
+  Name: string;
+  Address: string;
+  Category: string;
 }
 
 const Location = mongoose.model<ILocation>('Location', locationSchema);
