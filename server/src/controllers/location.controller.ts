@@ -39,20 +39,20 @@ const deleteLocation = async (
   res: express.Response,
   next: express.NextFunction,
 ) => {
-  const { name } = req.params;
-  if (!name) {
-    next(ApiError.missingFields(['name']));
+  const { Name } = req.params;
+  if (!Name) {
+    next(ApiError.missingFields(['Name']));
     return;
   }
 
   // Check if location to delete is an a valid location
-  const location: ILocation | null = await getLocationByName(name);
+  const location: ILocation | null = await getLocationByName(Name);
   if (!location) {
     next(ApiError.notFound(`User with location ${location} does not exist`));
     return;
   }
 
-  deleteLocationByName(location.name)
+  deleteLocationByName(location.Name)
     .then(() => res.sendStatus(StatusCode.OK))
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     .catch((e) => {

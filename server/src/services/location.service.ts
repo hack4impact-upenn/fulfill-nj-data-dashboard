@@ -1,7 +1,7 @@
 import { ILocation, Location } from '../models/location.model.ts';
 
-const createLocation = async (person: ILocation) => {
-  const newLocation = new Location(person);
+const createLocation = async (loc: ILocation) => {
+  const newLocation = new Location(loc);
   const result = await newLocation.save();
   return result;
 };
@@ -11,13 +11,13 @@ const getAllLocations = async () => {
   return locationList;
 };
 
-const getLocationByName = async (name: string) => {
-  const location = await Location.findOne({ name }).exec();
+const getLocationByName = async (Name: string) => {
+  const location = await Location.findOne({ Name }).exec();
   return location;
 };
 
-const deleteLocationByName = async (name: string) => {
-  const location = await Location.findByIdAndDelete(name).exec();
+const deleteLocationByName = async (Name: string) => {
+  const location = await Location.findByIdAndDelete(Name).exec();
   return location;
 };
 

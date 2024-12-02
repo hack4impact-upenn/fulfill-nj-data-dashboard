@@ -4,7 +4,7 @@ import { postData, putData, deleteData } from '../util/api.tsx';
 // Fetch all locations
 async function getLocations() {
   try {
-    const response = await fetch('http://localhost:4000/api/locations/get-locations', {
+    const response = await fetch('http://localhost:4000/api/location/get-locations', {
       method: 'GET',
       credentials: 'include',
     });
