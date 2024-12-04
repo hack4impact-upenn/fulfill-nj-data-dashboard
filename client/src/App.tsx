@@ -61,8 +61,10 @@ function App() {
                   <Route element={<ProtectedRoutesWrapper />}>
                     <Route path="/uploadcsv" element={<CSVUploadPage />} />
                     <Route path="/home" element={<HomePage />} />
-                    <Route path="/dashboard" element={<MapDashboard addressList={[]} />} />
-
+                    <Route
+                      path="/dashboard"
+                      element={<MapDashboard addressList={[]} />}
+                    />
                   </Route>
                   <Route element={<AdminRoutesWrapper />}>
                     <Route path="/users" element={<AdminDashboardPage />} />

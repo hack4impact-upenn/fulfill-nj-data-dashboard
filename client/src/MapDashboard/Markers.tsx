@@ -19,8 +19,15 @@ interface MarkersProps {
 const categoryColors: { [key: string]: string } = {
   Garden: 'green',
   SFSP: 'red',
-  'Assistant Sites': 'blue',
+  'Assistant Sites': 'navy',
   CACFP: 'purple',
+  Backpack: 'cyan',
+  'Group Home': 'yellow',
+  'Day Program': 'pink',
+  Shelter: 'gray',
+  'Senior Staples Program': 'brown',
+  Afterschool: 'silver',
+  'Mobile Pantry': 'gold',
 };
 
 const Markers: React.FC<MarkersProps> = ({ apiKey, getLocations }) => {
