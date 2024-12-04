@@ -3,7 +3,7 @@ import express from 'express';
 
 import {
   getAllAgenciesController,
-  uploadAgencyPickUpController,
+  uploadFoodDataController,
   getUploadAgencyJSONController,
 } from '../controllers/agency.controller.ts';
 
@@ -19,6 +19,6 @@ router.post('/uploadagencycontact', getUploadAgencyJSONController);
 // update agency information
 
 // update agency pickup days
-router.post('/uploadagencypickup', uploadAgencyPickUpController);
+router.post('/uploadfoodata', uploadFoodDataController);
 
 export default router;

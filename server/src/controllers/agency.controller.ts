@@ -8,7 +8,7 @@ import {
   getAllAgencies,
   createAgency,
   uploadAgencyJSON,
-  uploadAgencyMonthlyData,
+  uploadAgencyNewFoodData,
 } from '../services/agency.service.ts';
 
 const getAllAgenciesController = async (
@@ -45,7 +45,7 @@ const getUploadAgencyJSONController = async (
     });
 };
 
-const uploadAgencyPickUpController = async (
+const uploadFoodDataController = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction,
@@ -55,7 +55,7 @@ const uploadAgencyPickUpController = async (
     next(ApiError.missingFields(['agency']));
     return;
   }
-  return uploadAgencyMonthlyData(data)
+  return uploadAgencyNewFoodData(data)
     .then((results: any) => {
       res.status(StatusCode.OK).send(results);
     })
@@ -65,5 +65,5 @@ const uploadAgencyPickUpController = async (
     });
 };
 
-export { getAllAgenciesController, getUploadAgencyJSONController, uploadAgencyPickUpController };
+export { getAllAgenciesController, getUploadAgencyJSONController, uploadFoodDataController };
 

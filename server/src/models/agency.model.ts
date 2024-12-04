@@ -75,11 +75,6 @@ const AgencySchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  monthlyData: {
-    type: Map,
-    of: Number,
-    default: {},
-  },
 });
 
 interface IAgency extends mongoose.Document {
@@ -100,7 +95,6 @@ interface IAgency extends mongoose.Document {
   countyCode: string;
   activityStatus: string;
   hoursOfOperation: string;
-  monthlyData: Map<string, number>;
 }
 
 const Agency = mongoose.model<IAgency>('Agency', AgencySchema);

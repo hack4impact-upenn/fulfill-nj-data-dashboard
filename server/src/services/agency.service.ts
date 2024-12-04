@@ -49,7 +49,7 @@ const uploadAgencyJSON = async (jsonData: any) => {
         }
       });
       
-      agency["monthlyData"] = new Map(); 
+      // agency["monthlyData"] = new Map(); 
     
       console.log(row["Agency"]);
       console.log(agency);
@@ -70,26 +70,38 @@ const uploadAgencyJSON = async (jsonData: any) => {
 };
 
 
-const uploadAgencyMonthlyData = async (jsonData:any) => {
+const uploadAgencyNewFoodData = async (jsonData:any) => {
   for (const r in jsonData) {
     const row = jsonData[r];
     try {
-      const agency = await Agency.findOne({ name: row["Edited Agency Name"] });
+      const agency = await Agency.findOne(
+        {
+          $or: [
+            { name : row["Agency Name"] },
+            { editedName: row["Agency Name"] }
+          ]
+        }
+      );
       if (!agency) {
         console.log('Agency not found');
         return;
       }
-      const monthlyDataMap = agency.monthlyData;
-      for (const [month, value] of Object.entries(row)) {
-        if (monthlyDataMap.has(month)) {
-          console.log(`${month} already exists. Updating the value.`);
-        } else {
-          console.log(`${month} doesn't exist. Adding new value.`);
-        }
-        // Add or update the data in the Map
-        const val = String(value).replace(/,/g, ""); 
-        monthlyDataMap.set(month, Number(val));
-      }
+
+      console.log("Adding to total");
+      console.log(agency.total);
+      agency.total += Number(row["Additional Amount"]);
+      console.log(agency.total);
+      // for (const [month, value] of Object.entries(row)) {
+      //   if (monthlyDataMap.has(month)) {
+      //     console.log(`${month} already exists. Updating the value.`);
+      //   } else {
+      //     console.log(`${month} doesn't exist. Adding new value.`);
+      //   }
+      //   // Add or update the data in the Map
+      //   const val = String(value).replace(/,/g, ""); 
+      //   monthlyDataMap.set(month, Number(val));
+      // }
+
       await Agency.findOneAndUpdate( {name: agency["name"]}, agency, { upsert: true } );
     } catch (error: any) {
       // failedEntries.push({ entry: row, error: error.message });
@@ -97,4 +109,4 @@ const uploadAgencyMonthlyData = async (jsonData:any) => {
   }
 }
 
-export { getAllAgencies, createAgency, uploadAgencyJSON, uploadAgencyMonthlyData };
+export { getAllAgencies, createAgency, uploadAgencyJSON, uploadAgencyNewFoodData };
