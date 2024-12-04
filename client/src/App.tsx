@@ -23,6 +23,8 @@ import ResetPasswordPage from './Authentication/ResetPasswordPage.tsx';
 import AlertPopup from './components/AlertPopup.tsx';
 import InviteRegisterPage from './Authentication/InviteRegisterPage.tsx';
 import CSVUploadPage from './Upload/UploadCSVPage.tsx';
+import MapDashboard from './MapDashboard/MapDashboard.tsx';
+import router from 'server/src/routes/location.route.ts';
 
 function App() {
   return (
@@ -59,6 +61,8 @@ function App() {
                   <Route element={<ProtectedRoutesWrapper />}>
                     <Route path="/uploadcsv" element={<CSVUploadPage />} />
                     <Route path="/home" element={<HomePage />} />
+                    <Route path="/dashboard" element={<MapDashboard addressList={[]} />} />
+
                   </Route>
                   <Route element={<AdminRoutesWrapper />}>
                     <Route path="/users" element={<AdminDashboardPage />} />
