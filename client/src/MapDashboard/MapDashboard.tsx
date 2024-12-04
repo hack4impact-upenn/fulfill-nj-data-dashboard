@@ -180,6 +180,8 @@ function MapDashboard() {
           [-75.150000, 39.500000],
           [-73.094883, 40.500000],
         ]}
+        center={[-74.1224415, 40.000000]} // Longitude and Latitude for center
+        zoom={[2]} // Adjust the zoom level as needed (higher values are closer, lower values are farther)
         containerStyle={{
           height: '100vh',
           width: '100vw',
