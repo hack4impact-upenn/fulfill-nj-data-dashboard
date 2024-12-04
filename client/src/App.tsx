@@ -22,8 +22,8 @@ import EmailResetPasswordPage from './Authentication/EmailResetPasswordPage.tsx'
 import ResetPasswordPage from './Authentication/ResetPasswordPage.tsx';
 import AlertPopup from './components/AlertPopup.tsx';
 import InviteRegisterPage from './Authentication/InviteRegisterPage.tsx';
+import CSVUploadPage from './Upload/UploadCSVPage.tsx';
 import MapDashboard from './MapDashboard/MapDashboard.tsx';
-// import addresses from './ActualData/actual_merged_data.json';
 import router from 'server/src/routes/location.route.ts';
 
 function App() {
@@ -59,6 +59,7 @@ function App() {
                   />
                   {/* Routes accessed only if user is authenticated */}
                   <Route element={<ProtectedRoutesWrapper />}>
+                    <Route path="/uploadcsv" element={<CSVUploadPage />} />
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/dashboard" element={<MapDashboard addressList={[]} />} />
 

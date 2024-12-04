@@ -6,7 +6,7 @@ import { login as loginRedux } from '../util/redux/userSlice.ts';
 import FormGrid from '../components/form/FormGrid.tsx';
 import FormCol from '../components/form/FormCol.tsx';
 import FormRow from '../components/form/FormRow.tsx';
-import { emailRegex, InputErrorMessage } from '../util/inputvalidation.ts';
+import { emailRegex, fulfillEmailRegex, InputErrorMessage } from '../util/inputvalidation.ts';
 import { loginUser } from './api.ts';
 import AlertDialog from '../components/AlertDialog.tsx';
 import PrimaryButton from '../components/buttons/PrimaryButton.tsx';
@@ -95,7 +95,7 @@ function LoginPage() {
       }
     }
 
-    if (!values.email.match(emailRegex)) {
+    if (!values.email.match(fulfillEmailRegex)) {
       setErrorMessage('email', InputErrorMessage.INVALID_EMAIL);
       setShowError('email', true);
       isValid = false;

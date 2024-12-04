@@ -14,5 +14,7 @@ export enum InputErrorMessage {
 
 export const emailRegex =
   /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/g;
+export const fulfillEmailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@(fulfillnj\.org|([a-zA-Z0-9-]+\.)?upenn\.edu)$/;
+
 export const passwordRegex = /^[a-zA-Z0-9!?$%^*)(+=._-]{6,61}$/g;
 export const nameRegex = /^[a-z ,.'-]+/i;

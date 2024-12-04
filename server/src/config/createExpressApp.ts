@@ -5,11 +5,11 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import cors from 'cors';
 import MongoStore from 'connect-mongo';
-import routers from '../routes/routers.ts';
-import initializePassport from './configPassport.ts';
+import routers from '../routes/routers';
+import initializePassport from './configPassport';
 import 'dotenv/config';
-import apiErrorResponder from '../util/apiErrorResponder.ts';
-import ApiError from '../util/apiError.ts';
+import apiErrorResponder from '../util/apiErrorResponder';
+import ApiError from '../util/apiError';
 
 /**
  * Creates an express instance with the appropriate routes and middleware
@@ -18,7 +18,6 @@ import ApiError from '../util/apiError.ts';
  * @returns The configured {@link express.Express} instance
  */
 const createExpressApp = (sessionStore: MongoStore): express.Express => {
-  const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
   const app = express();
 
   // Set up passport and strategies
@@ -35,19 +34,7 @@ const createExpressApp = (sessionStore: MongoStore): express.Express => {
     }),
   );
   // Gives express the ability accept origins outside its own to accept requests from
-  // app.use(cors({ credentials: true, origin: FRONTEND_URL }));
-  app.use(
-    cors({
-      origin: [
-        FRONTEND_URL,
-        'http://localhost:3000',
-        'hackboilerplate.com',
-        'https://hackboilerplate.com',
-        'http://hackboilerplate.com',
-      ],
-      credentials: true,
-    }),
-  );
+  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
   // Gives express the ability to parse client cookies and add them to req.cookies
   app.use(cookieParser(process.env.COOKIE_SECRET));
 
